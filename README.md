@@ -120,3 +120,11 @@ requirements.txt
 README.md
 SECURITY.md
 ```
+
+
+## Included synthetic test labels
+
+- `sample_data/PASS_TEST.png` — positive test case intended to demonstrate a compliant label and an overall PASS when matching application data is entered.
+- `sample_data/TEST.png` — negative/review case used to demonstrate discrepancy detection and human-review behavior.
+
+Both are synthetic demonstration images. Do not use sensitive government data in this prototype.

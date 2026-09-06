@@ -13,6 +13,7 @@ from src.validators import (
     CANONICAL_GOVERNMENT_WARNING,
     compare_alcohol_content,
     compare_net_contents,
+    compare_producer,
     compare_text_values,
     evaluate_government_warning,
 )
@@ -202,7 +203,7 @@ if result is not None and result_hash == current_hash:
         "Product Type / Class": compare_text_values(product_type, result.product_type),
         "Alcohol Content": compare_alcohol_content(alcohol_content, result.alcohol_content),
         "Net Contents": compare_net_contents(net_contents, result.net_contents),
-        "Producer / Bottler": compare_text_values(producer_name, result.producer_name),
+        "Producer / Bottler": compare_producer(producer_name, result.producer_name),
         "Country of Origin": country_status,
         "Government Warning": warning_eval["status"],
     }

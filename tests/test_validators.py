@@ -5,6 +5,7 @@ from src.validators import (
     LabelExtraction,
     compare_alcohol_content,
     compare_net_contents,
+    compare_producer,
     compare_text_values,
     evaluate_government_warning,
 )
@@ -31,6 +32,25 @@ class ValidatorTests(unittest.TestCase):
 
     def test_centiliter_conversion(self):
         self.assertEqual(compare_net_contents("75 cL", "750 mL"), "MATCH")
+
+
+    def test_producer_with_location_matches(self):
+        self.assertEqual(
+            compare_producer(
+                "Sunridge Vineyards",
+                "Bottled by Sunridge Vineyards, Napa, California",
+            ),
+            "MATCH",
+        )
+
+    def test_different_producer_does_not_match(self):
+        self.assertEqual(
+            compare_producer(
+                "Sunridge Vineyards",
+                "Bottled by Mountain Ridge Cellars, Napa, California",
+            ),
+            "MISMATCH",
+        )
 
     def test_california_not_country(self):
         result = LabelExtraction(country_of_origin="California")

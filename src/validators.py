@@ -103,6 +103,68 @@ def compare_net_contents(application_value, extracted_value):
     return "MATCH" if abs(app - label) < 0.01 else "MISMATCH"
 
 
+
+def normalize_producer(value):
+    """
+    Normalize producer/bottler statements while preserving organization identity.
+
+    Examples treated as the same producer:
+    - Sunridge Vineyards
+    - Bottled by Sunridge Vineyards
+    - Bottled by Sunridge Vineyards, Napa, California
+    """
+    if not value:
+        return ""
+
+    cleaned = value.lower().strip()
+
+    prefixes = (
+        "produced and bottled by",
+        "cellared and bottled by",
+        "vinted and bottled by",
+        "produced by",
+        "bottled by",
+        "imported by",
+        "distributed by",
+    )
+
+    for prefix in prefixes:
+        if cleaned.startswith(prefix):
+            cleaned = cleaned[len(prefix):].strip()
+            break
+
+    cleaned = re.sub(r"[^a-z0-9]+", " ", cleaned)
+    cleaned = re.sub(r"\s+", " ", cleaned)
+
+    return cleaned.strip()
+
+
+def compare_producer(application_value, extracted_value):
+    """
+    Compare producer/bottler identity while allowing normal label prefixes
+    and trailing address/location text.
+    """
+    if not application_value or not extracted_value:
+        return "NEEDS REVIEW"
+
+    application = normalize_producer(application_value)
+    extracted = normalize_producer(extracted_value)
+
+    if not application or not extracted:
+        return "NEEDS REVIEW"
+
+    if application == extracted:
+        return "MATCH"
+
+    # Allow a producer name followed by location/address information.
+    if extracted.startswith(application + " "):
+        return "MATCH"
+
+    if application.startswith(extracted + " "):
+        return "MATCH"
+
+    return "MISMATCH"
+
 def normalize_country(value):
     if not value:
         return None
