@@ -2,6 +2,8 @@
 
 A standalone prototype that compares visible alcohol-label information against application data and produces explainable reviewer results.
 
+**Live prototype:** https://ai-alcohol-treasury-label-verifier.streamlit.app
+
 ## Why this implementation is different
 
 The prototype does not simply ask a model whether a label "looks right." It separates AI extraction from deterministic verification:
@@ -48,6 +50,18 @@ Physical type-size requirements cannot be reliably measured from an arbitrary ph
 
 See [`SECURITY.md`](SECURITY.md). Key controls include secure secret handling, 10 MB upload limits, real image decoding, decompression-bomb protection, metadata removal, in-memory processing, structured-output validation, `store=False`, prompt-injection resistance, safe errors, and API-call safeguards.
 
+## Tools used
+
+- Python
+- Streamlit
+- OpenAI Responses API with vision and structured output
+- Pydantic for schema validation
+- Pillow for image validation and sanitization
+- python-dotenv for local secret loading
+- Python `unittest` for automated testing
+- Git and GitHub for source control
+- Streamlit Community Cloud for deployment
+
 ## Setup
 
 ### Prerequisites
@@ -86,7 +100,12 @@ python -m streamlit run app.py
 
 ## Test data
 
-`sample_data/TEST.png` is synthetic test data included only for demonstration and development.
+Two synthetic demonstration labels are included:
+
+- `sample_data/PASS_TEST.png` — positive case intended to produce an overall PASS when matching application data is entered.
+- `sample_data/TEST.png` — negative/review case intended to demonstrate discrepancy detection and human-review behavior.
+
+Both contain synthetic/public demonstration data only.
 
 ## Assumptions and trade-offs
 
@@ -111,6 +130,7 @@ tests/
   test_security.py
   test_validators.py
 sample_data/
+  PASS_TEST.png
   TEST.png
 .streamlit/
   config.toml
@@ -122,9 +142,3 @@ SECURITY.md
 ```
 
 
-## Included synthetic test labels
-
-- `sample_data/PASS_TEST.png` — positive test case intended to demonstrate a compliant label and an overall PASS when matching application data is entered.
-- `sample_data/TEST.png` — negative/review case used to demonstrate discrepancy detection and human-review behavior.
-
-Both are synthetic demonstration images. Do not use sensitive government data in this prototype.
